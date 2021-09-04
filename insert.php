@@ -9,13 +9,16 @@
     // json_decode -> It takes JSON string and converts it into a PHP object or array, if true then associative array
     $data = stripslashes(file_get_contents("php://input"));
     $mydata = json_decode($data,true);
+
+    $id = $mydata['sid'];
     $name = $mydata['name'];
     $email = $mydata['email'];
     $password = $mydata['password'];
 
     if(!empty($name) && !empty($email) && !empty($password)){
 
-        $sql="INSERT INTO student(name,email,password) VALUES('{$name}','{$email}','{$password}')";
+        $sql="INSERT INTO student(ID,NAME,EMAIL,PASSWORD) VALUES('$id','{$name}','{$email}','{$password}') ON DUPLICATE KEY UPDATE NAME = '{$name}',EMAIL='{$email}',PASSWORD='{$password}'";
+
         if(mysqli_query($conn,$sql))
             echo 'Student data  save';
         else
